@@ -1,0 +1,17 @@
+platform :ios, '8.0'
+
+target ‘UMPodDemo’ do
+
+#友盟集成
+pod 'UMCCommon'
+pod 'UMCSecurityPlugins'
+pod 'UMCCommonLog'
+#友盟统计
+pod 'UMCAnalytics'
+#友盟推送
+pod 'UMCPush'
+#友盟分享
+pod 'UMCShare/UI'
+pod 'UMCShare/Social/QQ'
+
+end

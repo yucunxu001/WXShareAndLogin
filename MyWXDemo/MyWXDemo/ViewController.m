@@ -49,12 +49,69 @@
         [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:btn];
     }
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WXLogin:) name:@"WXAuthorizationSuccess" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(WXShare:) name:@"WXShareSuccess" object:nil];
 
+//    NSString * str1 = @"中秋送礼必备<br/>好多号优惠券好火内容<div class=\"title\">户外秋冬防风防水冲锋裤</div>";
+//    //1.将字符串转化为标准HTML字符串
+//    str1 = [self htmlEntityDecode:str1];
+//    //2.将HTML字符串转换为attributeString
+//    NSAttributedString * attributeStr = [self attributedStringWithHTMLString:str1];
+//    //3.使用label加载html字符串
+//    UILabel *lb = [[UILabel alloc] initWithFrame:CGRectMake(0, 100, kScreenWidth, 200)];
+//    lb.numberOfLines = 0;
+//    lb.attributedText = attributeStr;
+//    [self.view addSubview:lb];
+    
 }
 
+
+//将 &lt 等类似的字符转化为HTML中的“<”等
+- (NSString *)htmlEntityDecode:(NSString *)string
+{
+    string = [string stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
+    string = [string stringByReplacingOccurrencesOfString:@"&apos;" withString:@"'"];
+    string = [string stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
+    string = [string stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+    string = [string stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"]; // Do this last so that, e.g. @"&amp;lt;" goes to @"&lt;" not @"<"
+    
+    return string;
+}
+
+//将HTML字符串转化为NSAttributedString富文本字符串
+- (NSAttributedString *)attributedStringWithHTMLString:(NSString *)htmlString
+{
+    NSDictionary *options = @{ NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType,
+                               NSCharacterEncodingDocumentAttribute :@(NSUTF8StringEncoding) };
+    
+    NSData *data = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
+    
+    return [[NSAttributedString alloc] initWithData:data options:options documentAttributes:nil error:nil];
+}
+
+//去掉 HTML 字符串中的标签
+- (NSString *)filterHTML:(NSString *)html
+{
+    NSScanner * scanner = [NSScanner scannerWithString:html];
+    NSString * text = nil;
+    while([scanner isAtEnd]==NO)
+    {
+        //找到标签的起始位置
+        [scanner scanUpToString:@"<" intoString:nil];
+        //找到标签的结束位置
+        [scanner scanUpToString:@">" intoString:&text];
+        //替换字符
+        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@>",text] withString:@""];
+    }
+    //    NSString * regEx = @"<([^>]*)>";
+    //    html = [html stringByReplacingOccurrencesOfString:regEx withString:@""];
+    return html;
+}
+
+
+
+/***********************************/
 - (void)btnClick:(UIButton *)sender
 {
     if (sender.tag == 0) {
