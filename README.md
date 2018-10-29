@@ -1,3 +1,5 @@
 MyUMDemo项目是友盟分享
 MyWXDemo项目是微信原生分享和登录
+PlayVideoDemo项目是视频播放
+GetPicture项目是获取相册图片和拍照图片
 都是iOS项目
